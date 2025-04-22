@@ -76,12 +76,14 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				.limit(ps.limit)
 				.getMany();
 			const users = await this.userEntityService.packMany(results.map(r => r.userId), null);
-			return results.map(result => ({
-				id: result.userId,
-				ip: result.ip,
-				accessedAt: result.createdAt.toISOString(),
-				user: users.find(u => u.id === result.userId),
-			}));
+			return results
+				.map(result => ({
+					id: result.userId,
+					ip: result.ip,
+					accessedAt: result.createdAt.toISOString(),
+					user: users.find(u => u.id === result.userId),
+				}))
+				.filter(item => item.user !== undefined);
 		});
 	}
 }
